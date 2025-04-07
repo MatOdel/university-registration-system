@@ -44,6 +44,9 @@
         <form id="add-section-form" onsubmit="addSection(); return false;">
             <label for="semester">Semester:</label>
             <input type="text" id="semester" name="semester" required><br>
+            <label for="section-course-id">Course ID:</label>
+            <input type="text" id="section-course-id" name="course_id" required><br>
+
 
             <button type="submit">Add Section</button>
         </form>
@@ -58,36 +61,69 @@
     </section>
 
     <script>
-        // Placeholder functions to be implemented in Python backend later
+        // Add Student
         function addStudent() {
-            // Call backend function: add_student(name, address)
-            console.log("Adding student...");
+            const formData = new FormData(document.getElementById('add-student-form'));
+            fetch('/add_student', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding student:', err));
         }
-
+    
+        // Add Course
         function addCourse() {
-            // Call backend function: add_course(name, credits, course_id)
-            console.log("Adding course...");
+            const formData = new FormData(document.getElementById('add-course-form'));
+            fetch('/add_course', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding course:', err));
         }
-
+    
+        // Add Section
         function addSection() {
-            // Call backend function: add_section(semester)
-            console.log("Adding section...");
+            const formData = new FormData(document.getElementById('add-section-form'));
+            fetch('/add_section', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding section:', err));
         }
-
+    
+        // List Students
         function listStudents() {
-            // Call backend function: list_students()
-            console.log("Listing students...");
+            fetch('/list_students')
+            .then(res => res.json())
+            .then(data => {
+                alert("Students:\n" + data.map(s => `${s.name} (${s.address})`).join('\n'));
+            });
         }
-
+    
+        // List Courses (optionally filter by rubric later)
         function listCourses() {
-            // Call backend function: list_courses()
-            console.log("Listing courses...");
+            fetch('/list_courses')
+            .then(res => res.json())
+            .then(data => {
+                alert("Courses:\n" + data.map(c => `${c.id}: ${c.name} (${c.credits} credits)`).join('\n'));
+            });
         }
-
+    
+        // List Sections (optionally filter by course_id later)
         function listSections() {
-            // Call backend function: list_sections()
-            console.log("Listing sections...");
+            fetch('/list_sections')
+            .then(res => res.json())
+            .then(data => {
+                alert("Sections:\n" + data.map(s => `Course: ${s.course_id}, Semester: ${s.semester}`).join('\n'));
+            });
         }
     </script>
+    
 </body>
 </html>
