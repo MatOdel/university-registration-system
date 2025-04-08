@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>School Records Interface</title>
+</head>
+<body>
+    <h1>School Records Management</h1>
+
+    <!-- Add Student Form -->
+    <section>
+        <h2>Add Student</h2>
+        <form id="add-student-form" onsubmit="addStudent(); return false;">
+            <label for="student-name">Name:</label>
+            <input type="text" id="student-name" name="name" required><br>
+
+            <label for="student-address">Address:</label>
+            <input type="text" id="student-address" name="address" required><br>
+
+            <button type="submit">Add Student</button>
+        </form>
+    </section>
+
+    <!-- Add Course Form -->
+    <section>
+        <h2>Add Course</h2>
+        <form id="add-course-form" onsubmit="addCourse(); return false;">
+            <label for="course-name">Course Name:</label>
+            <input type="text" id="course-name" name="course_name" required><br>
+
+            <label for="course-credits">Credits:</label>
+            <input type="number" id="course-credits" name="credits" required><br>
+
+            <label for="course-id">Course ID:</label>
+            <input type="text" id="course-id" name="course_id" required><br>
+
+            <button type="submit">Add Course</button>
+        </form>
+    </section>
+
+    <!-- Add Section Form -->
+    <section>
+        <h2>Add Section</h2>
+        <form id="add-section-form" onsubmit="addSection(); return false;">
+            <label for="semester">Semester:</label>
+            <input type="text" id="semester" name="semester" required><br>
+            <label for="section-course-id">Course ID:</label>
+            <input type="text" id="section-course-id" name="course_id" required><br>
+
+
+            <button type="submit">Add Section</button>
+        </form>
+    </section>
+
+    <!-- Query Buttons -->
+    <section>
+        <h2>Queries</h2>
+        <button onclick="listStudents()">List Students</button>
+        <button onclick="listCourses()">List Courses</button>
+        <button onclick="listSections()">List Sections</button>
+    </section>
+
+    <script>
+        // Add Student
+        function addStudent() {
+            const formData = new FormData(document.getElementById('add-student-form'));
+            fetch('/add_student', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding student:', err));
+        }
+    
+        // Add Course
+        function addCourse() {
+            const formData = new FormData(document.getElementById('add-course-form'));
+            fetch('/add_course', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding course:', err));
+        }
+    
+        // Add Section
+        function addSection() {
+            const formData = new FormData(document.getElementById('add-section-form'));
+            fetch('/add_section', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => alert(data.message))
+            .catch(err => console.error('Error adding section:', err));
+        }
+    
+        // List Students
+        function listStudents() {
+            fetch('/list_students')
+            .then(res => res.json())
+            .then(data => {
+                alert("Students:\n" + data.map(s => `${s.name} (${s.address})`).join('\n'));
+            });
+        }
+    
+        // List Courses (optionally filter by rubric later)
+        function listCourses() {
+            fetch('/list_courses')
+            .then(res => res.json())
+            .then(data => {
+                alert("Courses:\n" + data.map(c => `${c.id}: ${c.name} (${c.credits} credits)`).join('\n'));
+            });
+        }
+    
+        // List Sections (optionally filter by course_id later)
+        function listSections() {
+            fetch('/list_sections')
+            .then(res => res.json())
+            .then(data => {
+                alert("Sections:\n" + data.map(s => `Course: ${s.course_id}, Semester: ${s.semester}`).join('\n'));
+            });
+        }
+    </script>
+    
+</body>
+</html>
